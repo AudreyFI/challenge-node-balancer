@@ -1,0 +1,12 @@
+{
+  "name": "challenge-node-balancer-servers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "nodemon --ext ts && ts-node ./index.ts"
+  },
+  "keywords": [],
+  "author": "mamado",
+  "license": "ISC"
+}
