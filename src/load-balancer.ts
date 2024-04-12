@@ -6,7 +6,7 @@ export class LoadBalancer {
   private static numberOfServers = 10;
   private static pollSeconds = 10;
 
-  public static healthCheck = (pollSeconds = 10) =>
+  public static healthCheck = () =>
     setInterval(async () => {
       if (!this.stopped) await this.getUpServers();
     }, this.pollSeconds * 1000);
