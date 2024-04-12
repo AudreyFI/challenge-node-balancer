@@ -1,20 +1,18 @@
 import express from "express";
+import { LoadBalancer } from "./load-balancer";
 
 const app = express();
 app.use(express.json());
 
-let healthyServers: string[] = [];
-const numberOfServers = 10;
-const pollSeconds = 10;
-let occurence = 0;
-let stopped = false;
-
 app.get("/", async (req, res) => {
-  stopped = false;
+  LoadBalancer.stopped = false;
   try {
-    console.log(`healthyServers`, healthyServers);
+    console.info(`healthyServers`, LoadBalancer.healthyServers);
 
-    const healthyServer = healthyServers?.[occurence++ % healthyServers.length];
+    const healthyServer =
+      LoadBalancer.healthyServers?.[
+        LoadBalancer.occurence++ % LoadBalancer.healthyServers.length
+      ];
     if (healthyServer) {
       res.redirect(healthyServer);
     }
@@ -24,33 +22,14 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/stop", (req, res) => {
+  LoadBalancer.stopped = true;
+  res.send("Stopped health check");
+});
+
 app.listen(81, () => {
   console.log(
     "Load balancer is running on port 81 and will redirect if possible"
   );
-  healthCheck();
+  LoadBalancer.healthCheck();
 });
-
-app.get("/stop", (req, res) => {
-  stopped = true;
-  res.send("Stopped health check");
-});
-
-const healthCheck = () =>
-  setInterval(async () => {
-    if (!stopped) await getUpServers();
-  }, pollSeconds * 1000);
-
-const getUpServers = async () => {
-  healthyServers = [];
-  for (let index = 0; index < numberOfServers; index++) {
-    const url = `http://localhost:${3000 + index}`;
-
-    try {
-      const response = await fetch(url);
-      if (response.body) healthyServers.push(url);
-    } catch (error) {
-      console.info(`There are no servers up at this url`, url);
-    }
-  }
-};

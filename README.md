@@ -21,3 +21,5 @@ Load balancers can work at different levels of the OSI seven-layer network model
 
 1. Start the load balancer: `npm start` it will expose the load balancer at port 81 `http://localhost:81`
 2. There are 3 servers under the src folder, you can start it with this command (for example server0) `cd src/server0 && npm start`
+3. Once one or more servers are launched you can curl the load balancer to see if it redirects well in a round robin mode by typing `curl http://localhost:81`
+4. You can also test multiple concurrent request with `curl --parallel --parallel-immediate --parallel-max 3 --config urls.txt`
