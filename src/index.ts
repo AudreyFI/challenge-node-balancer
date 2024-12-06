@@ -27,7 +27,7 @@ app.get("/stop", (req, res) => {
   res.send("Stopped health check");
 });
 
-app.listen(81, () => {
+app.listen(8181, () => {
   console.log(
     "Load balancer is running on port 81 and will redirect if possible"
   );
